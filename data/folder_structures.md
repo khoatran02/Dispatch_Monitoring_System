@@ -1,3 +1,4 @@
+```text
 Dataset/
 ├── Detection/  # YOLO format (bounding boxes)
 │   ├── train/
@@ -17,3 +18,4 @@ Dataset/
         ├── empty/
         ├── kakigori/
         └── not_empty/
+```
