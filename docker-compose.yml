@@ -1,13 +1,14 @@
 version: '3.8'
 
 services:
-  detection-service:
+  api-service:
     build:
       context: .
       dockerfile: Dockerfile
-    runtime: nvidia  # Required for GPU access
+    runtime: nvidia
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
+      - OMP_NUM_THREADS=4
     volumes:
       - ./model:/app/model
       - ./data:/app/data
@@ -22,8 +23,13 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-  web-interface:  # Optional - if you want a web interface
+  web-interface:
     image: nginx:alpine
     ports:
       - "8080:80"
@@ -31,4 +37,5 @@ services:
       - ./web:/usr/share/nginx/html
       - ./output:/usr/share/nginx/html/output
     depends_on:
-      - detection-service
+      api-service:
+        condition: service_healthy

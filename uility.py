@@ -8,6 +8,7 @@ from ultralytics import YOLO
 from model import *
 
 
+
 def process_image_with_detections(input_image, detector, classifier_dish, classifier_tray, observation_region):
     """
     Process ONLY the observation region of an image for detection and classification
@@ -136,43 +137,43 @@ def process_video(input_video_path, output_video_path, detector, classifier_dish
     print(f"Processing complete. Saved to {output_video_path}")
 
 
-# Example usage
-if __name__ == "__main__":
-    # Initialize models
-    detector = YOLO("model/detect.pt").to("cuda")
-    classifier_dish = Classifier(model_name='MobileNetV3').load_model("model/dish.pth")
-    classifier_tray = Classifier(model_name='MobileNetV3').load_model("model/tray.pth")
+# # Example usage
+# if __name__ == "__main__":
+#     # Initialize models
+#     detector = YOLO("model/detect.pt").to("cuda")
+#     classifier_dish = Classifier(model_name='MobileNetV3').load_model("model/dish.pth")
+#     classifier_tray = Classifier(model_name='MobileNetV3').load_model("model/tray.pth")
     
-    # Define observation region
-    observation_region = [
-        np.array([[956, 64], [1156, 114], [1361, 176], [1481, 222], 
-                 [1500, 274], [1483, 293], [1230, 229], [932, 150]])
-    ]
+#     # Define observation region
+#     observation_region = [
+#         np.array([[956, 64], [1156, 114], [1361, 176], [1481, 222], 
+#                  [1500, 274], [1483, 293], [1230, 229], [932, 150]])
+#     ]
 
-    # Process video
-    # input_video_path = "1473_CH05_20250501133703_154216.mp4"
-    # output_video_path = f"output_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp4"
-    # process_video(input_video_path, output_video_path, detector, classifier_dish, classifier_tray, observation_region)
+#     # Process video
+#     # input_video_path = "1473_CH05_20250501133703_154216.mp4"
+#     # output_video_path = f"output_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp4"
+#     # process_video(input_video_path, output_video_path, detector, classifier_dish, classifier_tray, observation_region)
 
 
-    # Process single image
-    input_image = "frame.png"  # or numpy array
-    output_image, objects = process_image_with_detections(
-        input_image, 
-        detector, 
-        classifier_dish, 
-        classifier_tray, 
-        observation_region
-    )
+#     # Process single image
+#     input_image = "frame.png"  # or numpy array
+#     output_image, objects = process_image_with_detections(
+#         input_image, 
+#         detector, 
+#         classifier_dish, 
+#         classifier_tray, 
+#         observation_region
+#     )
 
-    # Save results
-    cv2.imwrite("output.jpg", output_image)
+#     # Save results
+#     cv2.imwrite("output.jpg", output_image)
 
-    # Print detected objects
-    print("\nDetected Objects in Region:")
-    for i, obj in enumerate(objects, 1):
-        print(f"{i}. Type: {obj['type']}, Label: {obj['label']}, "
-                f"Confidence: {obj['confidence']:.2f}, BBox: {obj['bbox']}")
+#     # Print detected objects
+#     print("\nDetected Objects in Region:")
+#     for i, obj in enumerate(objects, 1):
+#         print(f"{i}. Type: {obj['type']}, Label: {obj['label']}, "
+#                 f"Confidence: {obj['confidence']:.2f}, BBox: {obj['bbox']}")
         
-        # Optionally save each cropped ROI
-        cv2.imwrite(f"object_{i}_{obj['type']}_{obj['label']}.jpg", obj["roi"])
+#         # Optionally save each cropped ROI
+#         cv2.imwrite(f"object_{i}_{obj['type']}_{obj['label']}.jpg", obj["roi"])

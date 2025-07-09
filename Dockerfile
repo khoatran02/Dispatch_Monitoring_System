@@ -15,13 +15,14 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install fastapi uvicorn python-multipart
 
 # Copy the rest of the application
 COPY . .
 
 # Create necessary directories
-RUN mkdir -p /app/data /app/output
+RUN mkdir -p /app/data /app/output /app/model
 
-# Command to run the application
-CMD ["python", "pipeline_system.py"]
+# Command to run the API
+CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
