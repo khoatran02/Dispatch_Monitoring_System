@@ -41,5 +41,85 @@ nvidia-smi
 docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi
 ```
 
+## Installation
+1. Clone the repository:
+```bash
+git clone https://github.com/khoatran02/Dispatch_Monitoring_System.git
+cd Dispatch_Monitoring_System
+```
+2. Prepare model files:
+```text
+model/
+├── detect.pt     # YOLO detection model
+├── dish.pth      # Dish classifier
+└── tray.pth      # Tray classifier
+```
+
+3. Build and launch the services:
+```bash
+docker-compose up -d --build
+```
+
+# Running the Application
+
+The system will automatically:
+
+* Initialize all ML models
+* Start the FastAPI server on port 8000
+* (Optional) Launch web interface on port 8080
+
+Check service status:
+
+```bash
+docker-compose ps
+```
+View logs:
+```bash
+docker-compose logs -f api-service
+```
+
+# API Usage
+
+## Health Check
+```bash
+curl http://localhost:8000/health
+```
+Image Processing
+
+```bash
+curl -X POST -F "file=@test.jpg" http://localhost:8000/detect/image
+```
+
+Parameters:
+
+* return_image: boolean (default true) - return annotated image
+* confidence_threshold: float (default 0.5) - minimum detection confidence
+
+Response:
+* Returns JPEG image with annotations OR
+* JSON with detection metadata
+
+Video Processing
+
+```bash
+curl -X POST -F "file=@test.mp4" \-F "output_format=json" \http://localhost:8000/detect/video
+```
+Parameters:
+
+* output_format: "json" or "video"
+* confidence_threshold: float (default 0.5)
+  
+Response:
+
+* JSON with frame-by-frame detections OR
+* Annotated MP4 video stream
+
+
+
+
+
+
+
+
 
 
